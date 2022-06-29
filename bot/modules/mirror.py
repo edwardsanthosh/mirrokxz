@@ -177,13 +177,6 @@ class MirrorListener:
             drive.upload(up_name)
 
     def onDownloadError(self, error):
-        reply_to = self.message.reply_to_message
-        if reply_to is not None:
-            try:
-                reply_to.delete()
-            except Exception as error:
-                LOGGER.warning(error)
-            pass
         error = error.replace('<', ' ').replace('>', ' ')
         clean_download(f'{DOWNLOAD_DIR}{self.uid}')
         with download_dict_lock:
@@ -218,8 +211,8 @@ class MirrorListener:
                 msg += f'\n<b>Corrupted Files: </b>{typ}'
             msg += f'\n\n<b>Hey </b>{self.tag} <b>Your Job is Done</b>'
             msg += f'\n<b>It Tooks:</b> {get_readable_time(time() - self.message.date.timestamp())}'
-         
-        if not files:
+            msg += f'\n\n<b>Thanks For using @Z_Mirror</b>'
+            if not files:
                 sendMessage(msg, self.bot, self.message)
             else:
                 fmsg = '\n<b>Your Files Are:</b>\n'
@@ -238,7 +231,7 @@ class MirrorListener:
                 msg += f'\n<b>Files: </b>{files}'
             msg += f'\n\n<b>Hey </b>{self.tag} <b>Your Job is Done</b>'
             msg += f'\n<b>It Tooks:</b> {get_readable_time(time() - self.message.date.timestamp())}'
-            
+            msg += f'\n\n<b>Thanks For using @Z_Mirror</b>'
             buttons = ButtonMaker()
             link = short_url(link)
             buttons.buildbutton("☁️ Drive Link", link)
